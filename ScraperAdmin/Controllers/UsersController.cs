@@ -15,6 +15,21 @@ namespace ScraperAdmin.Controllers
             _userService = userService;
         }
 
+
+        [HttpPost("create")]
+        public ActionResult CreateUser([FromBody] Users user)
+        {
+            if (user == null)
+            {
+                return BadRequest("Los datos del usuario son requeridos.");
+            }         
+
+            // Crear el usuario
+            _userService.AddUser(user);
+
+            return Ok(user);
+        }
+
         // GET: api/users
         [HttpGet]
         public ActionResult<IEnumerable<Users>> GetAllUsers()

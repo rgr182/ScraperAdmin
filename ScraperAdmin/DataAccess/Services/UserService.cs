@@ -1,4 +1,7 @@
+using BCrypt.Net;
 using ScraperAdmin.DataAccess.Models;
+using System;
+using System.Collections.Generic;
 
 namespace ScraperAdmin.DataAccess.Services
 {
@@ -33,13 +36,10 @@ namespace ScraperAdmin.DataAccess.Services
 
         public void AddUser(Users user)
         {
-            // Generar un token aleatorio para el usuario (puedes reemplazarlo por tu lógica de generación de token)
-            string token = Guid.NewGuid().ToString();
+            // Generar un token aleatorio para el usuario
+            user.AccessToken = GenerateHashedPassword();
 
-            // Guardar el token directamente en la base de datos
-            user.AccessToken = token;
-
-            // Guardar el usuario con el token generado
+            // Guardar el usuario con la contraseña hasheada y el token generado
             _userRepository.AddUser(user);
         }
 
@@ -57,6 +57,19 @@ namespace ScraperAdmin.DataAccess.Services
         {
             var user = _userRepository.GetUserByToken(token);
             return user != null; // Si se encuentra el usuario con ese token, el token es válido
+        }
+
+        // Método privado para generar una contraseña aleatoria y hashearla
+        private string GenerateHashedPassword()
+        {
+            string randomPassword = Guid.NewGuid().ToString(); // Genera una contraseña aleatoria basada en GUID
+            return BCrypt.Net.BCrypt.HashPassword(randomPassword); // Devuelve la contraseña hasheada
+        }
+
+        // Método privado para generar un token
+        private string GenerateToken()
+        {
+            return Guid.NewGuid().ToString(); // Genera un token aleatorio basado en GUID
         }
     }
 }

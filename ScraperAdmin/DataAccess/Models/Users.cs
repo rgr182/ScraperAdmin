@@ -21,10 +21,9 @@ namespace ScraperAdmin.DataAccess.Models
         [Required]
         [Column("AccessToken")]
         public string AccessToken { get; set; }  // Mapea a la columna "AccessToken"
-
-        [Required]
+        
         [Column("CreatedAt")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]  // El valor de "CreatedAt" será gestionado por la base de datos
-        public DateTime CreatedAt { get; set; }  // Mapea a la columna "CreatedAt"
+        public DateTime CreatedAt { get; set; }  // Mapea a la columna "CreatedAt"     
     }
 }
