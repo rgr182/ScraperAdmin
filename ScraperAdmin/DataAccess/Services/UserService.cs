@@ -9,6 +9,7 @@ namespace ScraperAdmin.DataAccess.Services
         void AddUser(Users user);
         void UpdateUser(Users user);
         void DeleteUser(int id);
+        bool ValidateToken(string token);
     }
 
     public class UserService : IUserService
@@ -32,13 +33,13 @@ namespace ScraperAdmin.DataAccess.Services
 
         public void AddUser(Users user)
         {
-            // Generate a random token for the user (you can replace this with any token logic)
+            // Generar un token aleatorio para el usuario (puedes reemplazarlo por tu lógica de generación de token)
             string token = Guid.NewGuid().ToString();
 
-            // Hash the token using BCrypt
-            user.AccessToken = BCrypt.Net.BCrypt.HashPassword(token);
+            // Guardar el token directamente en la base de datos
+            user.AccessToken = token;
 
-            // Save the user with the hashed token
+            // Guardar el usuario con el token generado
             _userRepository.AddUser(user);
         }
 
@@ -50,6 +51,12 @@ namespace ScraperAdmin.DataAccess.Services
         public void DeleteUser(int id)
         {
             _userRepository.DeleteUser(id);
+        }
+
+        public bool ValidateToken(string token)
+        {
+            var user = _userRepository.GetUserByToken(token);
+            return user != null; // Si se encuentra el usuario con ese token, el token es válido
         }
     }
 }

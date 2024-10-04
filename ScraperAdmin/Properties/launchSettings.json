@@ -5,7 +5,11 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:10566",
-      "sslPort": 44393
+      "sslPort": 44393,
+      "useWebSockets": false, // Desactivar WebSockets en IIS Express
+      "browserLink": {
+        "enabled": false // Desactivar Browser Link en IIS Express
+      }
     }
   },
   "profiles": {
@@ -32,6 +36,9 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "browserLink": {
+        "enabled": false // Desactivar Browser Link explícitamente
       }
     }
   }
