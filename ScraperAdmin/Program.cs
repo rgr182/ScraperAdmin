@@ -44,6 +44,14 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Security Headers Middleware
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'none';");
+    await next();
+});
+
 app.UseRouting();
 
 // Enable CORS
