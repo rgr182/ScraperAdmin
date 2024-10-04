@@ -24,8 +24,6 @@
     // Definir la función validateToken
     function validateToken(event) {
         event.preventDefault();  // Prevenir cualquier comportamiento predeterminado
-        debugger;  // Añadir debugger para detener la ejecución y depurar
-
         console.log("Validando el token...");
         var token = document.getElementById('tokenInput').value; // Obtener el token que el usuario introdujo
 
@@ -40,7 +38,9 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        alert("Token válido");
+                        // Guardar el token en sessionStorage en caso de éxito
+                        sessionStorage.setItem('accessToken', token);
+                        alert("Token válido y guardado en sessionStorage");
                     } else {
                         alert("Token inválido");
                     }
