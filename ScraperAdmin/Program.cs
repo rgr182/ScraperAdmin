@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Services;  // Importa los servicios y repositorios
 using Microsoft.OpenApi.Models;
+using DDEyC_Assistant.Services;
+using DDEyC_Assistant.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register the UserService and UserRepository for dependency injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddScoped<IAssistantService, AssistantService>();
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
