@@ -1,18 +1,16 @@
-using BCrypt.Net;
 using ScraperAdmin.DataAccess.Models;
-using System;
-using System.Collections.Generic;
+using ScraperAdmin.DataAccess.Repositories;
 
 namespace ScraperAdmin.DataAccess.Services
 {
     public interface IUserService
     {
-        IEnumerable<Users> GetAllUsers();
-        Users GetUserById(int id);
-        void AddUser(Users user);
-        void UpdateUser(Users user);
-        void DeleteUser(int id);
-        bool ValidateToken(string token);
+        Task<IEnumerable<Users>> GetAllUsersAsync();
+        Task<Users> GetUserByIdAsync(int id);
+        Task AddUserAsync(Users user);
+        Task UpdateUserAsync(Users user);
+        Task DeleteUserAsync(int id);
+        Task<bool> ValidateTokenAsync(string token);
     }
 
     public class UserService : IUserService
@@ -24,52 +22,45 @@ namespace ScraperAdmin.DataAccess.Services
             _userRepository = userRepository;
         }
 
-        public IEnumerable<Users> GetAllUsers()
+        public async Task<IEnumerable<Users>> GetAllUsersAsync()
         {
-            return _userRepository.GetAllUsers();
+            return await _userRepository.GetAllUsersAsync();
         }
 
-        public Users GetUserById(int id)
+        public async Task<Users> GetUserByIdAsync(int id)
         {
-            return _userRepository.GetUserById(id);
+            return await _userRepository.GetUserByIdAsync(id);
         }
 
-        public void AddUser(Users user)
+        public async Task AddUserAsync(Users user)
         {
-            // Generar un token aleatorio para el usuario
-            user.AccessToken = GenerateHashedPassword();
+            // Generate a random token for the user
+            user.AccessToken = GenerateToken();
 
-            // Guardar el usuario con la contraseña hasheada y el token generado
-            _userRepository.AddUser(user);
+            // Save the user with the hashed password and generated token
+            await _userRepository.AddUserAsync(user);
         }
 
-        public void UpdateUser(Users user)
+        public async Task UpdateUserAsync(Users user)
         {
-            _userRepository.UpdateUser(user);
+            await _userRepository.UpdateUserAsync(user);
         }
 
-        public void DeleteUser(int id)
+        public async Task DeleteUserAsync(int id)
         {
-            _userRepository.DeleteUser(id);
+            await _userRepository.DeleteUserAsync(id);
         }
 
-        public bool ValidateToken(string token)
+        public async Task<bool> ValidateTokenAsync(string token)
         {
-            var user = _userRepository.GetUserByToken(token);
-            return user != null; // Si se encuentra el usuario con ese token, el token es válido
+            var user = await _userRepository.GetUserByTokenAsync(token);
+            return user != null; // If a user is found with that token, the token is valid
         }
 
-        // Método privado para generar una contraseña aleatoria y hashearla
-        private string GenerateHashedPassword()
-        {
-            string randomPassword = Guid.NewGuid().ToString(); // Genera una contraseña aleatoria basada en GUID
-            return BCrypt.Net.BCrypt.HashPassword(randomPassword); // Devuelve la contraseña hasheada
-        }
-
-        // Método privado para generar un token
+        // Private method to generate a token
         private string GenerateToken()
         {
-            return Guid.NewGuid().ToString(); // Genera un token aleatorio basado en GUID
+            return Guid.NewGuid().ToString(); // Generates a random token based on GUID
         }
     }
 }

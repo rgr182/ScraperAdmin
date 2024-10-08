@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScraperAdmin.DataAccess.Models;
 using ScraperAdmin.DataAccess.Services;
+using ScraperAdmin.DataAccess.DTOs;
 
 namespace ScraperAdmin.Controllers
 {
@@ -15,50 +16,44 @@ namespace ScraperAdmin.Controllers
             _userService = userService;
         }
 
-
         [HttpPost("create")]
-        public ActionResult CreateUser([FromBody] Users user)
+        public async Task<ActionResult> CreateUser([FromBody] Users user)
         {
             if (user == null)
             {
-                return BadRequest("Los datos del usuario son requeridos.");
-            }         
+                return BadRequest("User data is required.");
+            }
 
-            // Crear el usuario
-            _userService.AddUser(user);
+            // Create the user asynchronously
+            await _userService.AddUserAsync(user);
 
             return Ok(user);
         }
 
         // GET: api/users
         [HttpGet]
-        public ActionResult<IEnumerable<Users>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<Users>>> GetAllUsers()
         {
-            var users = _userService.GetAllUsers();
+            var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
         [HttpPost("validateToken")]
-        public ActionResult ValidateToken([FromBody] TokenRequest request)
+        public async Task<ActionResult> ValidateToken([FromBody] TokenRequest request)
         {
             if (string.IsNullOrEmpty(request.Token))
             {
-                return BadRequest("Token es requerido.");
+                return BadRequest("Token is required.");
             }
 
-            // Aquí validamos el token
-            var isValid = _userService.ValidateToken(request.Token);
+            // Validate the token asynchronously
+            var isValid = await _userService.ValidateTokenAsync(request.Token);
             if (isValid)
             {
-                return Ok("Token válido.");
+                return Ok("Valid token.");
             }
 
-            return Unauthorized("Token inválido.");
+            return Unauthorized("Invalid token.");
         }
-    }
-
-    public class TokenRequest
-    {
-        public string Token { get; set; }
-    }
+    }   
 }
