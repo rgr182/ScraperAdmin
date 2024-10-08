@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ScraperAdmin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe2e02b296446f4c884204ac92e44082dc28d78c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d27d929c04d0921987219f876165c6150fbdef79")]
 [assembly: System.Reflection.AssemblyProductAttribute("ScraperAdmin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ScraperAdmin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,18 +1,11 @@
-﻿using ScraperAdmin.DataAccess.Models;
-using ScraperAdmin.DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ScraperAdmin.DataAccess.Repositories;
 
 namespace ScraperAdmin.DataAccess.Services
 {
     public interface IScraperService
     {
-        Task<IEnumerable<Scraper>> GetAllScrapersAsync();
-        Task<Scraper> GetScraperByIdAsync(Guid scraperId);
-        Task CreateScraperAsync(Scraper scraper);
-        Task UpdateScraperAsync(Scraper scraper);
-        Task DeleteScraperAsync(Guid scraperId);
+        Task<IEnumerable<Scraper>> GetAllScrapersAsync(HttpRequest request);
+        Task<Scraper> GetScraperByIdAsync(Guid scraperId, HttpRequest request);
     }
 
     public class ScraperService : IScraperService
@@ -24,31 +17,28 @@ namespace ScraperAdmin.DataAccess.Services
             _scraperRepository = scraperRepository;
         }
 
-        public async Task<IEnumerable<Scraper>> GetAllScrapersAsync()
+        public async Task<IEnumerable<Scraper>> GetAllScrapersAsync(HttpRequest request)
         {
-            return await _scraperRepository.GetAllAsync();
+            var scrapers = await _scraperRepository.GetAllAsync();
+
+            foreach (var scraper in scrapers)
+            {
+                scraper.ImagePath = $"{request.Scheme}://{request.Host}{scraper.ImagePath}";
+            }
+
+            return scrapers;
         }
 
-        public async Task<Scraper> GetScraperByIdAsync(Guid scraperId)
+        public async Task<Scraper> GetScraperByIdAsync(Guid scraperId, HttpRequest request)
         {
-            return await _scraperRepository.GetByIdAsync(scraperId);
-        }
+            var scraper = await _scraperRepository.GetByIdAsync(scraperId);
 
-        public async Task CreateScraperAsync(Scraper scraper)
-        {
-            // Generate a new ID for the scraper
-            scraper.ScraperId = Guid.NewGuid();
-            await _scraperRepository.AddAsync(scraper);
-        }
+            if (scraper != null)
+            {
+                scraper.ImagePath = $"{request.Scheme}://{request.Host}{scraper.ImagePath}";
+            }
 
-        public async Task UpdateScraperAsync(Scraper scraper)
-        {
-            await _scraperRepository.UpdateAsync(scraper);
-        }
-
-        public async Task DeleteScraperAsync(Guid scraperId)
-        {
-            await _scraperRepository.DeleteAsync(scraperId);
+            return scraper;
         }
     }
 }

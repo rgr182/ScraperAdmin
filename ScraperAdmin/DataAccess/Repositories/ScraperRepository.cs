@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScraperAdmin.DataAccess.Context;
-using ScraperAdmin.DataAccess.Models;
 
 namespace ScraperAdmin.DataAccess.Repositories
 {

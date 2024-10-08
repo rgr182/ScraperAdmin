@@ -4,7 +4,6 @@
     {
         Inactivo,
         Activo,
-        Fallido,
-        Completado
+        Fallido        
     }
 }

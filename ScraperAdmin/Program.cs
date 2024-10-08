@@ -3,6 +3,8 @@ using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Services;  // Importa los servicios y repositorios
 using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Configurar el middleware para servir archivos estáticos de la carpeta "Media"
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Media")),
+    RequestPath = "/Media"
+});
 
 // Security Headers Middleware
 app.Use(async (context, next) =>
