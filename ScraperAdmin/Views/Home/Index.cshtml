@@ -9,9 +9,9 @@
             <p class="card-text">Necesitas proporcionar un token de acceso válido para acceder a este recurso. Por favor, introduce tu token en el campo a continuación.</p>
 
             <div class="d-flex justify-content-center">
-                <!-- Input para el token -->
+                <!-- Input for the token -->
                 <input type="text" id="tokenInput" class="form-control text-center me-2" placeholder="Introduce tu token" style="max-width: 300px;" />
-                <!-- Div simulando un botón, lo cual elimina cualquier comportamiento submit de forma definitiva -->
+                <!-- Div simulating a button to completely remove any form submit behavior -->
                 <div id="customButton" class="btn btn-success" style="cursor: pointer;">Acceder</div>
             </div>
 
@@ -21,14 +21,13 @@
 </div>
 
 <script>
-    // Definir la función validateToken
+    // Define the validateToken function
     function validateToken(event) {
-        event.preventDefault();  // Prevenir cualquier comportamiento predeterminado
-        console.log("Validando el token...");
-        var token = document.getElementById('tokenInput').value; // Obtener el token que el usuario introdujo
+        event.preventDefault();  // Prevent any default behavior
+        var token = document.getElementById('tokenInput').value; // Get the token input by the user
 
         if (token) {
-            // Enviar el token al backend para validación
+            // Send the token to the backend for validation
             fetch('/api/users/validateToken', {
                 method: 'POST',
                 headers: {
@@ -38,21 +37,16 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        // Guardar el token en sessionStorage en caso de éxito
+                        // Store the token in sessionStorage upon successful validation
                         sessionStorage.setItem('accessToken', token);
-                        alert("Token válido y guardado en sessionStorage");
-                    } else {
-                        alert("Token inválido");
                     }
                 })
                 .catch(error => {
-                    console.error('Error al validar el token:', error);
+                    // Handle error silently or with your own custom error handling
                 });
-        } else {
-            alert("Por favor, introduce un token.");
         }
     }
 
-    // Atar el evento click a nuestro "botón" custom
+    // Attach the click event to our custom "button"
     document.getElementById('customButton').addEventListener('click', validateToken);
 </script>

@@ -38,10 +38,10 @@ namespace ScraperAdmin.DataAccess.Services
 
         public async Task AddUserAsync(Users user)
         {
-            // Generar un token aleatorio para el usuario
+            // Generate a random token for the user
             user.AccessToken = GenerateToken();
 
-            // Guardar el usuario con la contraseña hasheada y el token generado
+            // Save the user with the hashed password and generated token
             await _userRepository.AddUserAsync(user);
         }
 
@@ -58,13 +58,13 @@ namespace ScraperAdmin.DataAccess.Services
         public async Task<bool> ValidateTokenAsync(string token)
         {
             var user = await _userRepository.GetUserByTokenAsync(token);
-            return user != null; // Si se encuentra el usuario con ese token, el token es válido
+            return user != null; // If a user is found with that token, the token is valid
         }
 
-        // Método privado para generar un token
+        // Private method to generate a token
         private string GenerateToken()
         {
-            return Guid.NewGuid().ToString(); // Genera un token aleatorio basado en GUID
+            return Guid.NewGuid().ToString(); // Generates a random token based on GUID
         }
     }
 }

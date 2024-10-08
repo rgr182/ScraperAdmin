@@ -22,10 +22,10 @@ namespace ScraperAdmin.Controllers
         {
             if (user == null)
             {
-                return BadRequest("Los datos del usuario son requeridos.");
+                return BadRequest("User data is required.");
             }
 
-            // Crear el usuario de forma asincrónica
+            // Create the user asynchronously
             await _userService.AddUserAsync(user);
 
             return Ok(user);
@@ -44,17 +44,17 @@ namespace ScraperAdmin.Controllers
         {
             if (string.IsNullOrEmpty(request.Token))
             {
-                return BadRequest("Token es requerido.");
+                return BadRequest("Token is required.");
             }
 
-            // Validar el token de forma asincrónica
+            // Validate the token asynchronously
             var isValid = await _userService.ValidateTokenAsync(request.Token);
             if (isValid)
             {
-                return Ok("Token válido.");
+                return Ok("Valid token.");
             }
 
-            return Unauthorized("Token inválido.");
+            return Unauthorized("Invalid token.");
         }
     }
 

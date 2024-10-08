@@ -4,28 +4,28 @@ using System.Text.Json.Serialization;
 
 namespace ScraperAdmin.DataAccess.Models
 {
-    [Table("Users")]  // Mapea el modelo a la tabla "Users"
+    [Table("Users")]  // Maps the model to the "Users" table
     public class Users
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonIgnore]
-        public int UserId { get; set; }  // Mapea a la columna "UserId" en la base de datos
+        public int UserId { get; set; }  // Maps to the "UserId" column in the database
 
         [Column("Email")]
-        public string Email { get; set; }  // Mapea a la columna "Email"
+        public string Email { get; set; }  // Maps to the "Email" column
 
         [Required]
         [Column("Username")]
-        public string Username { get; set; }  // Mapea a la columna "Username"
+        public string Username { get; set; }  // Maps to the "Username" column
 
-        [JsonIgnore]  // Evita que AccessToken sea expuesto en JSON
+        [JsonIgnore]  // Prevents AccessToken from being exposed in JSON
         [Column("AccessToken")]
-        public string? AccessToken { get; set; }  // Hacemos que AccessToken sea opcional en el modelo
+        public string? AccessToken { get; set; }  // Makes AccessToken optional in the model
 
         [Column("CreatedAt")]
         [JsonIgnore]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]  // El valor de "CreatedAt" será gestionado por la base de datos
-        public DateTime CreatedAt { get; set; }  // Mapea a la columna "CreatedAt"
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]  // "CreatedAt" value will be managed by the database
+        public DateTime CreatedAt { get; set; }  // Maps to the "CreatedAt" column
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ScraperAdmin.DataAccess.Context;
-using ScraperAdmin.DataAccess.Services;  // Importa los servicios y repositorios
+using ScraperAdmin.DataAccess.Services;
 using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
 using Microsoft.Extensions.FileProviders;
@@ -8,27 +8,21 @@ using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Configure the connection to SQL Server using Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register the UserService and UserRepository for dependency injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IScraperService, ScraperService>();
 builder.Services.AddScoped<IScraperRepository, ScraperRepository>();
 
-// Add services to the container
 builder.Services.AddControllersWithViews();
 
-// Add Swagger services
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ScraperAdmin API", Version = "v1" });
 });
 
-// Add CORS policy that accepts any request
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -39,7 +33,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -49,7 +42,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Configurar el middleware para servir archivos estáticos de la carpeta "Media"
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
@@ -57,7 +49,6 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Media"
 });
 
-// Security Headers Middleware
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Add("X-Frame-Options", "DENY");
@@ -67,10 +58,8 @@ app.Use(async (context, next) =>
 
 app.UseRouting();
 
-// Enable CORS
 app.UseCors("AllowAll");
 
-// Enable Swagger middleware
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
