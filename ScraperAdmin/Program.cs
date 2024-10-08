@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Services;  // Importa los servicios y repositorios
 using Microsoft.OpenApi.Models;
-using DDEyC_Assistant.Services;
-using DDEyC_Assistant.Services.Interfaces;
+using ScraperAdmin.DataAccess.Repositories;
+using ScraperAdmin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +16,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssistantService, AssistantService>();
+builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddScoped<IParserService, ParserService>();
+builder.Services.AddScoped<IAIEventProcessingService, AIEventProcessingService>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
