@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScraperAdmin.DataAccess.Models;
 using ScraperAdmin.DataAccess.Services;
+using ScraperAdmin.DataAccess.DTOs;
 
 namespace ScraperAdmin.Controllers
 {
@@ -54,10 +55,5 @@ namespace ScraperAdmin.Controllers
 
             return Unauthorized("Invalid token.");
         }
-    }
-
-    public class TokenRequest
-    {
-        public string Token { get; set; }
-    }
+    }   
 }
