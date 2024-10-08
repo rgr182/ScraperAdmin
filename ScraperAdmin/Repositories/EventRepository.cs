@@ -22,6 +22,10 @@ namespace ScraperAdmin.DataAccess.Repositories
         public async Task CreateEventAsync(Event @event) =>
             await _events.InsertOneAsync(@event);
 
+         public async Task CreateEventsAsync(IEnumerable<Event> events)
+        {
+            await _events.InsertManyAsync(events);
+        }
         public async Task UpdateEventAsync(string id, Event @event) =>
             await _events.ReplaceOneAsync(e => e.Id == id, @event);
 

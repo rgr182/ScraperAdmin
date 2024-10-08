@@ -18,7 +18,7 @@ namespace ScraperAdmin.DataAccess.Services
                 throw new InvalidOperationException("OpenAI API key is not set in environment variables.");
             }
             _openAiClient = new OpenAIClient(apiKey);
-            _assistantId = configuration["OpenAI-Identifiers:FormAssistant"];
+            _assistantId = configuration["OpenAI:AssistantId"];
             if (string.IsNullOrEmpty(_assistantId))
             {
                 throw new InvalidOperationException("OpenAI Assistant ID is not set in configuration.");

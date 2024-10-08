@@ -7,6 +7,7 @@ namespace ScraperAdmin.DataAccess.Repositories
         Task<List<Event>> GetAllEventsAsync();
         Task<Event> GetEventByIdAsync(string id);
         Task CreateEventAsync(Event @event);
+        Task CreateEventsAsync(IEnumerable<Event> events);
         Task UpdateEventAsync(string id, Event @event);
         Task DeleteEventAsync(string id);
         Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);

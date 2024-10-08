@@ -24,11 +24,8 @@ namespace ScraperAdmin.DataAccess.Services
             try
             {
                 var events = await _parserService.ParseHtmlToEventsAsync(htmlContent);
-
-                foreach (var @event in events)
-                {
-                    await _eventRepository.CreateEventAsync(@event);
-                }
+                _logger.LogInformation($"Successfully parsed {events.Count} events");
+                await _eventRepository.CreateEventsAsync(events);
 
                 _logger.LogInformation($"Successfully processed and stored {events.Count} events");
             }

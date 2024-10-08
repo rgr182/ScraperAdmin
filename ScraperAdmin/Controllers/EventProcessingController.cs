@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using ScraperAdmin.DataAccess.Services;
-using ScraperAdmin.Services;
 
 namespace ScraperAdmin.Controllers
 {
