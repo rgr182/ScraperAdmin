@@ -1,9 +1,5 @@
-using BCrypt.Net;
 using ScraperAdmin.DataAccess.Models;
 using ScraperAdmin.DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ScraperAdmin.DataAccess.Services
 {

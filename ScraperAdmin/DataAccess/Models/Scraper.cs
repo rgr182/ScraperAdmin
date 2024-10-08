@@ -1,5 +1,4 @@
 ﻿using ScraperAdmin.DataAccess.Enumerables;
-using System.ComponentModel.DataAnnotations.Schema;
 
 public class Scraper
 {

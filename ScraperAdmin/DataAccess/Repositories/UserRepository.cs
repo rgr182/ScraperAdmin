@@ -1,10 +1,6 @@
 using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ScraperAdmin.DataAccess.Repositories
 {

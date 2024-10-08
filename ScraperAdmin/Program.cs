@@ -4,7 +4,6 @@ using ScraperAdmin.DataAccess.Services;
 using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
 using Microsoft.Extensions.FileProviders;
-using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
