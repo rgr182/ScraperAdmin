@@ -1,4 +1,5 @@
-﻿using ScraperAdmin.DataAccess.Repositories;
+﻿using ScraperAdmin.DataAccess.Models;
+using ScraperAdmin.DataAccess.Repositories;
 
 namespace ScraperAdmin.DataAccess.Services
 {

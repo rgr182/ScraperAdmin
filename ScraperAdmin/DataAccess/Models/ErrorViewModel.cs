@@ -1,4 +1,4 @@
-namespace ScraperAdmin.Models
+namespace ScraperAdmin.DataAccess.Models
 {
     public class ErrorViewModel
     {
