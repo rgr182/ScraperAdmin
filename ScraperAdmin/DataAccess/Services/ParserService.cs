@@ -104,7 +104,7 @@ namespace ScraperAdmin.Services
                     Title = e.titulo,
                     Description = e.descripcion,
                     Location = e.lugar,
-                    Date = DateTime.Parse(e.fecha),
+                    Date = string.IsNullOrWhiteSpace(e.fecha) ? DateTime.UtcNow : DateTime.Parse(e.fecha),
                     Time = e.horario,
                     DetailLink = e.ligaDetalle
                 }).ToList() ?? new List<Event>();

@@ -20,6 +20,9 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped<IParserService, ParserService>();
 builder.Services.AddScoped<IAIEventProcessingService, AIEventProcessingService>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IRawHtmlRepository, RawHtmlRepository>();
+builder.Services.AddScoped<IRawHtmlService, RawHtmlService>();
+
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
