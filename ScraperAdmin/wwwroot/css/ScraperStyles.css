@@ -1,0 +1,116 @@
+/* ScraperStyles.css */
+
+/* Ajustes generales */
+body.scraper-body {
+    background-color: #0F6FE4;
+    margin: 0;
+}
+
+.scraper-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Alinea las tarjetas de scrappers en una fila y las centra */
+.scraper-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Ajustes a la tarjeta individual */
+.scraper-card {
+    width: 300px;
+    height: 250px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ScraperStyles.css */
+
+/* Ajustes generales */
+body.scraper-body {
+    background-color: #0F6FE4; /* Color de fondo de la página */
+    margin: 0;
+    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* This will center the content vertically */
+}
+
+.scraper-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; /* Centrar el contenedor */
+    padding: 20px;
+    text-align: center; /* Centra el texto en el contenedor */
+}
+
+/* Alinea las tarjetas de scrappers en una fila */
+.scraper-row {
+    display: flex;
+    justify-content: center; /* Asegura que las tarjetas estén centradas */
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten */
+    gap: 20px; /* Espacio entre las tarjetas */
+}
+
+/* Ajustes a la tarjeta individual */
+.scraper-card {
+    width: 300px; /* Ajusta según tus necesidades */
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Asegura que el contenido esté al final */
+    align-items: center; /* Centra el contenido horizontalmente */
+    background-color: white; /* Fondo blanco para la tarjeta */
+    color: white; /* Cambia el color del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Contenedor de la imagen */
+.scraper-card-body {
+    width: 100%;
+    height: 200px; /* Altura fija para la imagen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+    .scraper-card-body img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* Mantiene la proporción de la imagen */
+    }
+
+/* Ajustes para el texto de la tarjeta */
+.scraper-card-footer {
+    background-color: rgba(0, 128, 0, 0.7); /* Fondo verde semitransparente */
+    width: 100%; /* Ancho completo */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Espacia el texto y el ícono */
+}
+
+/* Paginación */
+.scraper-pagination .pagination {
+    margin-top: 20px;
+    justify-content: center; /* Centra la paginación */
+}
+
+/* Título centrado */
+h2 {
+    color: white; /* Asegúrate de que el título sea visible */
+    margin-bottom: 20px; /* Espaciado inferior */
