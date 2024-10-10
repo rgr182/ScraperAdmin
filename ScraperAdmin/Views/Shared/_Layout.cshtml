@@ -72,12 +72,7 @@
         // Llamar a la función de validación cuando la página se carga
         document.addEventListener('DOMContentLoaded', function () {
             // Verificar si estamos en la página de inicio para evitar redirecciones infinitas
-            var currentPath = window.location.pathname.toLowerCase();
-
-            // Evita la validación del token en páginas públicas como Home/Index
-            if (currentPath !== '/home/index') {
-                validateToken();
-            }
+            var currentPath = window.location.pathname.toLowerCase();          
         });
     </script>
 
