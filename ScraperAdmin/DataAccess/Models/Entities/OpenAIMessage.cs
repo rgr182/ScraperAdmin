@@ -1,5 +1,5 @@
 namespace ScraperAdmin.DataAccess.Models.Entities;
- public class MessageEntity
+ public class OpenAIMessage
     {
         public string Content { get; set; }
     }

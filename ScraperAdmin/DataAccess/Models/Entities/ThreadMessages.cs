@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScraperAdmin.DataAccess.Models.Entities
 {
-    public class Message
+    public class ThreadMessage
     {
         [Key]
         public int Id { get; set; }

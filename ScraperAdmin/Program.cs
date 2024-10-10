@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<RawHtmlRepositoryOptions>(builder.Configuration.GetSection(RawHtmlRepositoryOptions.RawHtml));
+
 // Register the UserService and UserRepository for dependency injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

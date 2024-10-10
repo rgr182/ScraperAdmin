@@ -4,6 +4,7 @@ using ScraperAdmin.DataAccess.Models.Documents;
 using ScraperAdmin.DataAccess.Models.Entities;
 using ScraperAdmin.DataAccess.Services;
 using MongoDB.Bson;
+using ScraperAdmin.DataAccess.Models.DTOs;
 
 namespace ScraperAdmin.Services
 {
@@ -60,7 +61,7 @@ namespace ScraperAdmin.Services
             }
         }
 
-        private async Task<List<Event>> HandleRequiredActions(string threadId, RunEntity runEntity)
+        private async Task<List<Event>> HandleRequiredActions(string threadId, Run runEntity)
         {
             List<Event> parsedEvents = new List<Event>();
 
@@ -86,27 +87,25 @@ namespace ScraperAdmin.Services
             return parsedEvents;
         }
         #pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-
-  private List<Event> ParseJsonContent(string content)
+        private List<Event> ParseJsonContent(string content)
         {
             try
             {
                 _logger.LogInformation("Parsing JSON content: {Content}", content);
 
-                // Parse the escaped JSON string
                 using JsonDocument doc = JsonDocument.Parse(content);
                 string unescapedJson = doc.RootElement.GetProperty("eventos").ToString();
 
-                var eventos = JsonSerializer.Deserialize<List<EventJson>>(unescapedJson);
+                var eventos = JsonSerializer.Deserialize<List<EventJsonDto>>(unescapedJson);
                 var events = eventos?.Select(e => new Event
                 {
                     Id = ObjectId.GenerateNewId().ToString(),
-                    Title = e.titulo,
-                    Description = e.descripcion,
-                    Location = e.lugar,
-                    Date = string.IsNullOrWhiteSpace(e.fecha) ? DateTime.UtcNow : DateTime.Parse(e.fecha),
-                    Time = e.horario,
-                    DetailLink = e.ligaDetalle
+                    Title = e.Titulo,
+                    Description = e.Descripcion,
+                    Location = e.Lugar,
+                    Date = string.IsNullOrWhiteSpace(e.Fecha) ? DateTime.UtcNow : DateTime.Parse(e.Fecha),
+                    Time = e.Horario,
+                    DetailLink = e.LigaDetalle
                 }).ToList() ?? new List<Event>();
 
                 _logger.LogInformation("Parsed {Count} events from JSON", events.Count);
@@ -122,16 +121,6 @@ namespace ScraperAdmin.Services
                 _logger.LogError(ex, "Failed to parse JSON content: {Content}", content);
                 return new List<Event>();
             }
-        }
-
-        private class EventJson
-        {
-            public string titulo { get; set; }
-            public string descripcion { get; set; }
-            public string lugar { get; set; }
-            public string fecha { get; set; }
-            public string horario { get; set; }
-            public string ligaDetalle { get; set; }
         }
     }
 }

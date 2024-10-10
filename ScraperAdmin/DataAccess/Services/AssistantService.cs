@@ -26,12 +26,12 @@ namespace ScraperAdmin.DataAccess.Services
             _logger = logger;
         }
         
-        public async Task<ThreadEntity> CreateThreadAsync()
+        public async Task<Models.Entities.Thread> CreateThreadAsync()
         {
             #pragma warning disable OPENAI001
             var thread = await _openAiClient.GetAssistantClient().CreateThreadAsync();
             #pragma warning restore OPENAI001
-            return new ThreadEntity { Id = thread.Value.Id };
+            return new Models.Entities.Thread { Id = thread.Value.Id };
         }
 
         #pragma warning disable OPENAI001 
@@ -43,29 +43,29 @@ namespace ScraperAdmin.DataAccess.Services
         }
             #pragma warning restore OPENAI001
 
-        public async Task<RunEntity> CreateAndRunAssistantAsync(string threadId)
+        public async Task<Run> CreateAndRunAssistantAsync(string threadId)
         {
             #pragma warning disable OPENAI001
             var run = await _openAiClient.GetAssistantClient().CreateRunAsync(threadId, _assistantId);
             #pragma warning restore OPENAI001
-            return new RunEntity { Id = run.Value.Id, Status = run.Value.Status };
+            return new Run { Id = run.Value.Id, Status = run.Value.Status };
         }
 
-        public async Task<RunEntity> GetRunAsync(string threadId, string runId)
+        public async Task<Run> GetRunAsync(string threadId, string runId)
         {
             #pragma warning disable OPENAI001
             var run = await _openAiClient.GetAssistantClient().GetRunAsync(threadId, runId);
             #pragma warning restore OPENAI001
-            return new RunEntity 
+            return new Run
             { 
                 Id = run.Value.Id, 
                 Status = run.Value.Status,
-                RequiredActions = run.Value.RequiredActions?.Select(a => new RequiredActionEntity
+                RequiredActions = run.Value.RequiredActions?.Select(a => new Models.Entities.RequiredAction
                 {
                     ToolCallId = a.ToolCallId,
                     FunctionName = a.FunctionName,
                     FunctionArguments = a.FunctionArguments
-                }).ToList() ?? new List<RequiredActionEntity>()
+                }).ToList() ?? new List<Models.Entities.RequiredAction>()
             };
         }
 
@@ -81,7 +81,7 @@ namespace ScraperAdmin.DataAccess.Services
             #pragma warning restore OPENAI001
         }
         //TODO, check if they have added an awaiter for GetMessagesAsync (they haven't as of october 7th 2024)
-        public async Task<MessageEntity?> GetLatestMessageAsync(string threadId)
+        public async Task<OpenAIMessage?> GetLatestMessageAsync(string threadId)
         {
             #pragma warning disable OPENAI001
             // var messages = await _openAiClient.GetAssistantClient().GetMessagesAsync(threadId);
@@ -90,7 +90,7 @@ namespace ScraperAdmin.DataAccess.Services
             #pragma warning restore OPENAI001
         
             return latestMessage != null
-                ? new MessageEntity { Content = latestMessage.Content?.FirstOrDefault()?.Text ?? string.Empty }
+                ? new OpenAIMessage { Content = latestMessage.Content?.FirstOrDefault()?.Text ?? string.Empty }
                 : null;
         }
     }
