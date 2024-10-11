@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using ScraperAdmin.DataAccess.Models;
 using ScraperAdmin.DataAccess.Models.Documents;
 
 namespace ScraperAdmin.DataAccess.Context
@@ -19,5 +20,6 @@ namespace ScraperAdmin.DataAccess.Context
         }
 
         public IMongoCollection<Event> Events => _database.GetCollection<Event>("Events");
+        public IMongoCollection<Scraper> Scrapers => _database.GetCollection<Scraper>("Scrapers");
     }
 }

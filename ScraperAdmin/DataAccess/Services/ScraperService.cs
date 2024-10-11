@@ -6,7 +6,9 @@ namespace ScraperAdmin.DataAccess.Services
     public interface IScraperService
     {
         Task<IEnumerable<Scraper>> GetAllScrapersAsync(HttpRequest request);
-        Task<Scraper> GetScraperByIdAsync(Guid scraperId, HttpRequest request);
+        Task<Scraper?> GetScraperByIdAsync(Guid scraperId, HttpRequest request);
+        Task<Scraper> CreateScraperAsync(Scraper scraper, HttpRequest request);
+        Task<bool> UpdateLastExecutionDateAsync(Guid scraperId, DateTime lastExecutionDate);
     }
 
     public class ScraperService : IScraperService
@@ -30,7 +32,7 @@ namespace ScraperAdmin.DataAccess.Services
             return scrapers;
         }
 
-        public async Task<Scraper> GetScraperByIdAsync(Guid scraperId, HttpRequest request)
+        public async Task<Scraper?> GetScraperByIdAsync(Guid scraperId, HttpRequest request)
         {
             var scraper = await _scraperRepository.GetByIdAsync(scraperId);
 
@@ -40,6 +42,24 @@ namespace ScraperAdmin.DataAccess.Services
             }
 
             return scraper;
+        }
+
+        public async Task<Scraper> CreateScraperAsync(Scraper scraper, HttpRequest request)
+        {
+            scraper.ScraperId = Guid.NewGuid();
+            scraper.LastExecutionDate = null;  // Set to null as it's a new scraper
+
+            var createdScraper = await _scraperRepository.AddAsync(scraper);
+
+            // Update the ImagePath with the full URL
+            createdScraper.ImagePath = $"{request.Scheme}://{request.Host}{createdScraper.ImagePath}";
+
+            return createdScraper;
+        }
+
+        public async Task<bool> UpdateLastExecutionDateAsync(Guid scraperId, DateTime lastExecutionDate)
+        {
+            return await _scraperRepository.UpdateLastExecutionDateAsync(scraperId, lastExecutionDate);
         }
     }
 }
