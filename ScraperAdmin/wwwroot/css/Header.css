@@ -1,0 +1,33 @@
+﻿/* Estilos exclusivos para el header */
+
+/* Contenedor del header */
+.custom-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0F6FE4; /* Azul */
+    padding: 10px 20px;
+    height: 70px;
+}
+
+/* Estilos del logo dentro del header */
+.custom-header-logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+    .custom-header-logo img {
+        height: 50px;
+    }
+
+/* Estilos del botón de logout dentro del header */
+.custom-header-logout {
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+    .custom-header-logout:hover {
+        text-decoration: underline;
+    }

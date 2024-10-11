@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Reutilizable</title>
+    <link href="~/css/Header.css" rel="stylesheet" />
+</head>
+<body>
+
+    <header class="custom-header">
+        <!-- Logo -->
+        <div class="custom-header-logo" onclick="goHome()">
+            <img src="~/Media/ICON.png" alt="Git Image" class="img-fluid" />
+        </div>
+        <!-- Logout -->
+        <div class="custom-header-logout" onclick="logout()">Log Out</div>
+    </header>
+
+    <script>
+        // Redirige a la página de inicio
+        function goHome() {
+            window.location.href = '/Home/Index';
+        }
+
+        // Borra el local storage y redirige al login
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/Login'; // Cambia esto por la ruta del login
+        }
+    </script>
+
+</body>
+</html>
