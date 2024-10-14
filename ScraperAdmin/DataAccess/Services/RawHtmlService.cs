@@ -1,31 +1,34 @@
 using ScraperAdmin.DataAccess.Models.Documents;
 using ScraperAdmin.DataAccess.Repositories;
-namespace ScraperAdmin.DataAccess.Services{
-public class RawHtmlService : IRawHtmlService
+
+namespace ScraperAdmin.DataAccess.Services
 {
-    private readonly IRawHtmlRepository _rawHtmlRepository;
-    private readonly ILogger<RawHtmlService> _logger;
+ 
 
-    public RawHtmlService(IRawHtmlRepository rawHtmlRepository, ILogger<RawHtmlService> logger)
+    public class RawHtmlService : IRawHtmlService
     {
-        _rawHtmlRepository = rawHtmlRepository;
-        _logger = logger;
-    }
+        private readonly IRawHtmlRepository _rawHtmlRepository;
+        private readonly ILogger<RawHtmlService> _logger;
 
-    public async Task<IEnumerable<RawHtmlDocument>> GetAllRawHtmlAsync()
-    {
-        try
+        public RawHtmlService(IRawHtmlRepository rawHtmlRepository, ILogger<RawHtmlService> logger)
         {
-            var documents = await _rawHtmlRepository.GetAllRawHtmlAsync();
-            _logger.LogInformation($"Retrieved {documents.Count} raw HTML documents");
-            return documents;
+            _rawHtmlRepository = rawHtmlRepository;
+            _logger = logger;
         }
-        catch (Exception ex)
+
+        public async Task<IEnumerable<RawHtmlDocument>> GetAllUnparsedRawHtmlAsync()
         {
-            _logger.LogError(ex, "Error occurred while fetching raw HTML documents");
-            throw;
+            try
+            {
+                var documents = await _rawHtmlRepository.GetAllUnparsedRawHtmlAsync();
+                _logger.LogInformation($"Retrieved {documents.Count} unparsed raw HTML documents");
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching unparsed raw HTML documents");
+                throw;
+            }
         }
     }
-}
-
 }

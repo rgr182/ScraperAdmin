@@ -5,13 +5,15 @@ using ScraperAdmin.DataAccess.Models.Documents;
 
 namespace ScraperAdmin.DataAccess.Repositories
 {
+   
+
     public class RawHtmlRepository : IRawHtmlRepository
     {
         private readonly IMongoCollection<RawHtmlDocument> _rawHtmlCollection;
         private readonly ILogger<RawHtmlRepository> _logger;
 
         public RawHtmlRepository(
-            MongoDbContext context, 
+            MongoDbContext context,
             IOptions<RawHtmlRepositoryOptions> options,
             ILogger<RawHtmlRepository> logger)
         {
@@ -26,23 +28,38 @@ namespace ScraperAdmin.DataAccess.Repositories
             _logger.LogInformation("RawHtmlRepository initialized with collection: {CollectionName}", options.Value.CollectionName);
         }
 
-        public async Task<List<RawHtmlDocument>> GetAllRawHtmlAsync()
+        public async Task<List<RawHtmlDocument>> GetAllUnparsedRawHtmlAsync()
         {
             try
             {
-                var documents = await _rawHtmlCollection.Find(_ => true).ToListAsync();
-                _logger.LogInformation("Retrieved {Count} raw HTML documents", documents.Count);
+                var documents = await _rawHtmlCollection.Find(d => !d.IsParsed).ToListAsync();
+                _logger.LogInformation("Retrieved {Count} unparsed raw HTML documents", documents.Count);
                 return documents;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching raw HTML documents");
+                _logger.LogError(ex, "Error occurred while fetching unparsed raw HTML documents");
+                throw;
+            }
+        }
+
+        public async Task UpdateParsedStatusAsync(string id, bool isParsed)
+        {
+            try
+            {
+                var filter = Builders<RawHtmlDocument>.Filter.Eq(d => d.Id, id);
+                var update = Builders<RawHtmlDocument>.Update.Set(d => d.IsParsed, isParsed);
+                var result = await _rawHtmlCollection.UpdateOneAsync(filter, update);
+                _logger.LogInformation("Updated parsed status for document {Id}. Modified: {ModifiedCount}", id, result.ModifiedCount);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating parsed status for document {Id}", id);
                 throw;
             }
         }
     }
-
-    public class RawHtmlRepositoryOptions
+     public class RawHtmlRepositoryOptions
     {
         public const string RawHtml = "RawHtml";
 

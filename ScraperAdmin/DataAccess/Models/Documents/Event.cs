@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
 
 namespace ScraperAdmin.DataAccess.Models.Documents
 {
@@ -18,7 +16,7 @@ namespace ScraperAdmin.DataAccess.Models.Documents
         public string Description { get; set; } = string.Empty;
 
         [BsonElement("lugar")]
-        public string Location { get; set; }= string.Empty;
+        public string Location { get; set; } = string.Empty;
 
         [BsonElement("fecha")]
         public DateTime Date { get; set; }
@@ -28,5 +26,8 @@ namespace ScraperAdmin.DataAccess.Models.Documents
 
         [BsonElement("liga_detalle")]
         public string DetailLink { get; set; } = string.Empty;
+
+        [BsonElement("scraperId")]
+        public Guid? ScraperId { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Services;
 using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
-using ScraperAdmin.Services;
+
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.Configure<RawHtmlRepositoryOptions>(builder.Configuration.GetSection(RawHtmlRepositoryOptions.RawHtml));
+builder.Services.Configure<RawHtmlRepositoryOptions>(options =>
+{
+    options.CollectionName = builder.Configuration["MongoDB:Collections:RawHtmlCollectionName"]?? RawHtmlRepositoryOptions.RawHtml;
+});
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

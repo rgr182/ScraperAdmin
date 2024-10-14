@@ -2,11 +2,10 @@ using System.Text.Json;
 using OpenAI.Assistants;
 using ScraperAdmin.DataAccess.Models.Documents;
 using ScraperAdmin.DataAccess.Models.Entities;
-using ScraperAdmin.DataAccess.Services;
 using MongoDB.Bson;
 using ScraperAdmin.DataAccess.Models.DTOs;
 
-namespace ScraperAdmin.Services
+namespace ScraperAdmin.DataAccess.Services
 {
     public class ParserService : IParserService
     {
@@ -19,29 +18,24 @@ namespace ScraperAdmin.Services
             _logger = logger;
         }
 
-        #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        public async Task<List<Event>> ParseHtmlToEventsAsync(string htmlContent)
+        public async Task<ParseResult> ParseHtmlToEventsAsync(RawHtmlDocument document)
         {
             try
             {
                 var threadEntity = await _assistantService.CreateThreadAsync();
-                _logger.LogInformation("Created thread: {ThreadID}", threadEntity.Id);
-                await _assistantService.AddMessageToThreadAsync(threadEntity.Id, htmlContent, MessageRole.User);
-                _logger.LogInformation("Added message to thread: {ThreadID}", threadEntity.Id);
+                #pragma warning disable OPENAI001
+                await _assistantService.AddMessageToThreadAsync(threadEntity.Id, document.general, MessageRole.User);
                 var runEntity = await _assistantService.CreateAndRunAssistantAsync(threadEntity.Id);
-                _logger.LogInformation("Created and run assistant: {ThreadID}, {RunID}", threadEntity.Id, runEntity.Id);
+
                 List<Event> parsedEvents = new List<Event>();
 
                 while (runEntity.Status != RunStatus.Completed && runEntity.Status != RunStatus.Failed)
                 {
-                    _logger.LogInformation("Waiting for assistant to complete: {ThreadID}, {RunID}", threadEntity.Id, runEntity.Id);
                     await Task.Delay(1000);
                     runEntity = await _assistantService.GetRunAsync(threadEntity.Id, runEntity.Id);
-                    _logger.LogInformation("Status: {Status}", runEntity.Status);
                     if (runEntity.Status == RunStatus.RequiresAction)
                     {
-                        _logger.LogInformation("Handling required action: {ThreadID}, {RunID}", threadEntity.Id, runEntity.Id);
-                        var newEvents = await HandleRequiredActions(threadEntity.Id, runEntity);
+                        var newEvents = await HandleRequiredActions(threadEntity.Id, runEntity, scraperId: document.ScraperId);
                         parsedEvents.AddRange(newEvents);
                     }
                 }
@@ -50,18 +44,21 @@ namespace ScraperAdmin.Services
                 {
                     throw new Exception("Assistant run failed");
                 }
-
-                _logger.LogInformation("Total parsed events: {Count}", parsedEvents.Count);
-                return parsedEvents;
+                #pragma warning restore OPENAI001 
+                return new ParseResult
+                {
+                    ScraperId = document.ScraperId,
+                    Events = parsedEvents
+                };
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while parsing HTML to events");
+                _logger.LogError(ex, "Error occurred while parsing HTML to events for document {DocumentId}", document.Id);
                 throw;
             }
         }
 
-        private async Task<List<Event>> HandleRequiredActions(string threadId, Run runEntity)
+        private async Task<List<Event>> HandleRequiredActions(string threadId, DataAccess.Models.Entities.Run runEntity, Guid? scraperId = null)
         {
             List<Event> parsedEvents = new List<Event>();
 
@@ -76,7 +73,6 @@ namespace ScraperAdmin.Services
                     parsedEvents.AddRange(events);
                     _logger.LogInformation("Parsed events: {ParsedEvents}", JsonSerializer.Serialize(events));
                     
-                    // Submit a response to complete the required action
                     var response = JsonSerializer.Serialize(new { success = true, count = events.Count });
                     _logger.LogInformation("Submitting response to complete required action: {ThreadID}, {RunID}, {ToolCallID}, {Response}", 
                         threadId, runEntity.Id, action.ToolCallId, response);
@@ -86,8 +82,8 @@ namespace ScraperAdmin.Services
 
             return parsedEvents;
         }
-        #pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        private List<Event> ParseJsonContent(string content)
+
+        private List<Event> ParseJsonContent(string content, Guid? scraperId = null)
         {
             try
             {
@@ -105,15 +101,11 @@ namespace ScraperAdmin.Services
                     Location = e.Lugar,
                     Date = string.IsNullOrWhiteSpace(e.Fecha) ? DateTime.UtcNow : DateTime.Parse(e.Fecha),
                     Time = e.Horario,
-                    DetailLink = e.LigaDetalle
+                    DetailLink = e.LigaDetalle,
+                    ScraperId = scraperId
                 }).ToList() ?? new List<Event>();
 
                 _logger.LogInformation("Parsed {Count} events from JSON", events.Count);
-                foreach (var evt in events)
-                {
-                    _logger.LogInformation("Parsed event: {EventTitle}", evt.Title);
-                }
-
                 return events;
             }
             catch (JsonException ex)
