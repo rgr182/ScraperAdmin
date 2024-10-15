@@ -10,7 +10,7 @@ namespace ScraperAdmin.DataAccess.Context
 
         public MongoDbContext(IConfiguration configuration)
         {
-            var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
+            var client = new MongoClient(configuration.GetSection("MongoDB:ConnectionString").Value);
             _database = client.GetDatabase(configuration["MongoDB:DatabaseName"]);
         }
 

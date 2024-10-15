@@ -69,7 +69,7 @@ namespace ScraperAdmin.DataAccess.Services
                     _logger.LogInformation("Storing parsed events: {ThreadID}, {RunID}", threadId, runEntity.Id);
                     var parsedJson = action.FunctionArguments;
                     _logger.LogInformation("Parsed JSON: {ParsedJSON}", parsedJson);
-                    var events = ParseJsonContent(parsedJson);
+                    var events = ParseJsonContent(parsedJson, scraperId);
                     parsedEvents.AddRange(events);
                     _logger.LogInformation("Parsed events: {ParsedEvents}", JsonSerializer.Serialize(events));
                     
