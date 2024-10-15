@@ -17,6 +17,7 @@ namespace ScraperAdmin.DataAccess.Models.Documents
         public bool IsParsed { get; set; } = false;
 
         [BsonElement("scraperId")]
+        [BsonRepresentation(BsonType.String)]
         public Guid ScraperId { get; set; }
     }
 }
