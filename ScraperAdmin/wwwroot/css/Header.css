@@ -1,16 +1,16 @@
-﻿/* Estilos exclusivos para el header */
+﻿/* Exclusive styles for the header */
 
-/* Contenedor del header */
+/* Header container */
 .custom-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0F6FE4; /* Azul */
+    background-color: #0F6FE4; /* Blue */
     padding: 10px 20px;
     height: 70px;
 }
 
-/* Estilos del logo dentro del header */
+/* Logo styles inside the header */
 .custom-header-logo {
     display: flex;
     align-items: center;
@@ -21,7 +21,7 @@
         height: 50px;
     }
 
-/* Estilos del botón de logout dentro del header */
+/* Logout button styles inside the header */
 .custom-header-logout {
     color: white;
     font-size: 18px;

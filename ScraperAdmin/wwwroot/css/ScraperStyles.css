@@ -1,116 +1,77 @@
-/* ScraperStyles.css */
-
-/* Ajustes generales */
+/* General Adjustments */
 body.scraper-body {
-    background-color: #0F6FE4;
-    margin: 0;
+    background-color: #0F6FE4; /* Background color of the page */
+    margin: 0; /* Removes default margin */
+    min-height: 95vh; /* Ensures the body takes up at least the full viewport height */
+    flex-direction: column; /* Arranges content in a column */
+    justify-content: center; /* Centers the content vertically */
 }
 
 .scraper-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%; /* Full width of the container */
+    max-width: 1200px; /* Maximum width of the container */
+    margin: 0 auto; /* Centers the container horizontally */
+    padding: 20px; /* Padding inside the container */
+    text-align: center; /* Centers text within the container */
 }
 
-/* Alinea las tarjetas de scrappers en una fila y las centra */
+/* Aligns scraper cards in a row */
 .scraper-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: flex; /* Uses flexbox layout */
+    justify-content: center; /* Ensures cards are centered */
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if necessary */
+    gap: 20px; /* Space between the cards */
 }
 
-/* Ajustes a la tarjeta individual */
+/* Adjustments for individual scraper cards */
 .scraper-card {
-    width: 300px;
-    height: 250px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Fixed width of the card */
+    margin-bottom: 20px; /* Space below each card */
+    display: flex; /* Enables flexbox for content layout */
+    flex-direction: column; /* Arranges content vertically */
+    justify-content: flex-end; /* Ensures content is aligned to the bottom */
+    align-items: center; /* Centers content horizontally */
+    background-color: white; /* White background for the card */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Prevents overflow of content */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
 }
 
-/* ScraperStyles.css */
-
-/* Ajustes generales */
-body.scraper-body {
-    background-color: #0F6FE4; /* Color de fondo de la página */
-    margin: 0;
-    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* This will center the content vertically */
-}
-
-.scraper-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto; /* Centrar el contenedor */
-    padding: 20px;
-    text-align: center; /* Centra el texto en el contenedor */
-}
-
-/* Alinea las tarjetas de scrappers en una fila */
-.scraper-row {
-    display: flex;
-    justify-content: center; /* Asegura que las tarjetas estén centradas */
-    flex-wrap: wrap; /* Permite que las tarjetas se ajusten */
-    gap: 20px; /* Espacio entre las tarjetas */
-}
-
-/* Ajustes a la tarjeta individual */
-.scraper-card {
-    width: 300px; /* Ajusta según tus necesidades */
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; /* Asegura que el contenido esté al final */
-    align-items: center; /* Centra el contenido horizontalmente */
-    background-color: white; /* Fondo blanco para la tarjeta */
-    color: white; /* Cambia el color del texto */
-    border-radius: 8px; /* Bordes redondeados */
-    overflow: hidden; /* Asegura que el contenido no se desborde */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-}
-
-/* Contenedor de la imagen */
+/* Image container within the card */
 .scraper-card-body {
-    width: 100%;
-    height: 200px; /* Altura fija para la imagen */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    width: 100%; /* Full width of the card body */
+    height: 200px; /* Fixed height for the image area */
+    display: flex; /* Enables flexbox for alignment */
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    padding: 20px; /* Padding around the image */
 }
 
+    /* Styling for the image within the card body */
     .scraper-card-body img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain; /* Mantiene la proporción de la imagen */
+        max-width: 100%; /* Ensures image does not exceed card width */
+        max-height: 100%; /* Ensures image does not exceed card height */
+        object-fit: contain; /* Maintains aspect ratio of the image */
     }
 
-/* Ajustes para el texto de la tarjeta */
+/* Adjustments for the text footer of the card */
 .scraper-card-footer {
-    background-color: rgba(0, 128, 0, 0.7); /* Fondo verde semitransparente */
-    width: 100%; /* Ancho completo */
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Espacia el texto y el ícono */
+    background-color: rgba(0, 128, 0, 0.7); /* Semi-transparent green background */
+    width: 100%; /* Full width of the footer */
+    padding: 10px; /* Padding inside the footer */
+    display: flex; /* Enables flexbox for layout */
+    flex-direction: column; /* Arranges content vertically */
+    justify-content: space-between; /* Spaces text and icon apart */
 }
 
-/* Paginación */
+/* Pagination styles */
 .scraper-pagination .pagination {
-    margin-top: 20px;
-    justify-content: center; /* Centra la paginación */
+    margin-top: 20px; /* Space above pagination */
+    justify-content: center; /* Centers pagination links */
 }
 
-/* Título centrado */
+/* Centered title styling */
 h2 {
-    color: white; /* Asegúrate de que el título sea visible */
-    margin-bottom: 20px; /* Espaciado inferior */
+    color: white; /* White text color for visibility */
+    margin-bottom: 20px; /* Space below the title */
+}
