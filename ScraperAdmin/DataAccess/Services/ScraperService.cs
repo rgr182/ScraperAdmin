@@ -37,7 +37,7 @@ namespace ScraperAdmin.DataAccess.Services
             if (scraper != null)
             {
                 scraper.ImagePath = $"{request.Scheme}://{request.Host}{scraper.ImagePath}";
-            }
+            }           
 
             return scraper;
         }
