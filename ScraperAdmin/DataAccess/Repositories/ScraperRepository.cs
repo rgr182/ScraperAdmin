@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Driver;
 using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Models;
 
@@ -8,50 +8,52 @@ namespace ScraperAdmin.DataAccess.Repositories
     {
         Task<IEnumerable<Scraper>> GetAllAsync();
         Task<Scraper> GetByIdAsync(Guid scraperId);
-        Task AddAsync(Scraper scraper);
+        Task<Scraper> AddAsync(Scraper scraper);
         Task UpdateAsync(Scraper scraper);
+        Task<bool> UpdateLastExecutionDateAsync(Guid scraperId, DateTime lastExecutionDate);
         Task DeleteAsync(Guid scraperId);
     }
 
     public class ScraperRepository : IScraperRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMongoCollection<Scraper> _scrapers;
 
-        public ScraperRepository(ApplicationDbContext context)
+        public ScraperRepository(MongoDbContext context)
         {
-            _context = context;
+            _scrapers = context.Scrapers;
         }
 
         public async Task<IEnumerable<Scraper>> GetAllAsync()
         {
-            return await _context.Scraper.ToListAsync();
+            return await _scrapers.Find(_ => true).ToListAsync();
         }
 
         public async Task<Scraper> GetByIdAsync(Guid scraperId)
         {
-            return await _context.Scraper.FindAsync(scraperId);
+            return await _scrapers.Find(s => s.ScraperId == scraperId).FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(Scraper scraper)
+        public async Task<Scraper> AddAsync(Scraper scraper)
         {
-            await _context.Scraper.AddAsync(scraper);
-            await _context.SaveChangesAsync();
+            await _scrapers.InsertOneAsync(scraper);
+            return scraper;
         }
 
         public async Task UpdateAsync(Scraper scraper)
         {
-            _context.Scraper.Update(scraper);
-            await _context.SaveChangesAsync();
+            await _scrapers.ReplaceOneAsync(s => s.ScraperId == scraper.ScraperId, scraper);
+        }
+
+        public async Task<bool> UpdateLastExecutionDateAsync(Guid scraperId, DateTime lastExecutionDate)
+        {
+            var updateDefinition = Builders<Scraper>.Update.Set(s => s.LastExecutionDate, lastExecutionDate);
+            var result = await _scrapers.UpdateOneAsync(s => s.ScraperId == scraperId, updateDefinition);
+            return result.ModifiedCount > 0;
         }
 
         public async Task DeleteAsync(Guid scraperId)
         {
-            var scraper = await _context.Scraper.FindAsync(scraperId);
-            if (scraper != null)
-            {
-                _context.Scraper.Remove(scraper);
-                await _context.SaveChangesAsync();
-            }
+            await _scrapers.DeleteOneAsync(s => s.ScraperId == scraperId);
         }
     }
 }

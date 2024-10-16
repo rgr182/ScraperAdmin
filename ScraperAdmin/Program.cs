@@ -3,6 +3,7 @@ using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Services;
 using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
+
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +11,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<RawHtmlRepositoryOptions>(options =>
+{
+    options.CollectionName = builder.Configuration["MongoDB:Collections:RawHtmlCollectionName"]?? RawHtmlRepositoryOptions.RawHtml;
+});
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAssistantService, AssistantService>();
+builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddScoped<IParserService, ParserService>();
+builder.Services.AddScoped<IAIEventProcessingService, AIEventProcessingService>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IRawHtmlRepository, RawHtmlRepository>();
+builder.Services.AddScoped<IRawHtmlService, RawHtmlService>();
 builder.Services.AddScoped<IScraperService, ScraperService>();
 builder.Services.AddScoped<IScraperRepository, ScraperRepository>();
 
