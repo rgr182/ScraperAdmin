@@ -43,7 +43,7 @@ namespace Cron_BolsaDeTrabajo
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("appsettings.cron.json", optional: false, reloadOnChange: true);
 
             return builder.Build();
         }
