@@ -28,7 +28,7 @@ namespace Cron_BolsaDeTrabajo
 
 #if TESTING
             // Execute testing method if in testing profile
-            cronService.TestCron().Wait();
+            cronService.ExecuteOnce().Wait();
 #else
             // Start the Cron Service
             cronService.StartAsync().Wait();
