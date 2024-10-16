@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Cron_BolsaDeTrabajo.Infrastructure;
@@ -14,7 +17,7 @@ namespace ScrapperCron.Services
 
     public class CronService : ICronService
     {
-        private readonly IMongoDbConnection _mongoDbConnection;        
+        private readonly IMongoDbConnection _mongoDbConnection;
         private Timer _timer;
         private readonly string _cronExpression;
         private readonly IConfiguration _configuration;
@@ -25,7 +28,7 @@ namespace ScrapperCron.Services
             _configuration = configuration;
 
             // Setup MongoDB collection access
-            var mongoCollectionName = _configuration["MongoDB:CollectionName"];         
+            var mongoCollectionName = _configuration["MongoDB:CollectionName"];
 
             // Load cron expression from configuration
             _cronExpression = _configuration["CronJob:CronExpression"];
@@ -58,15 +61,60 @@ namespace ScrapperCron.Services
 
         public async Task ExecuteOnce()
         {
-            await ExecuteTaskAsync();            
+            await ExecuteTaskAsync();
         }
 
         private async Task ExecuteTaskAsync()
         {
-            Console.WriteLine("Ejecutado!");
-            //TODO: Execute Cron.
+            Console.WriteLine("Activando entorno virtual y cambiando al directorio del proyecto...");
 
-            // Reset the timer for the next run according to the cron expression
+            // Ruta al entorno virtual de Python
+            string activateVenv = @"C:\Users\GIBRAN\Python\BoilerPlateScrapy\venv\Scripts\activate.bat";
+
+            // Directorio del proyecto de Scrapy
+            string scrapyProjectPath = @"C:\Users\GIBRAN\Python\BoilerPlateScrapy\boilerplateScrapy";
+
+            // Primero, activamos el entorno virtual y verificamos la versión de Python
+            var activateProcessStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",  // Ejecuta cmd.exe
+                Arguments = $"/C {activateVenv} && cd {scrapyProjectPath} && python --version",  // Verifica que estamos usando la versión correcta de Python
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = new Process { StartInfo = activateProcessStartInfo })
+            {
+                process.Start();
+                process.WaitForExit();  // Asegura que el proceso se complete antes de continuar
+            }
+
+            // Ahora ejecuta cada spider por separado
+            Console.WriteLine("Ejecutando los spiders de Scrapy...");
+
+            var spiders = new List<string> { "bookspider", "techCrunch", "angelList" };
+
+            foreach (var spiderName in spiders)
+            {
+                Console.WriteLine($"Ejecutando el spider: {spiderName}");
+
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/C {activateVenv} && cd {scrapyProjectPath} && C:\\Users\\GIBRAN\\Python\\BoilerPlateScrapy\\venv\\Scripts\\scrapy.exe crawl {spiderName}",  // Usa la ruta completa de scrapy
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = scrapyProjectPath  // Establece el directorio de trabajo al proyecto Scrapy
+                };
+
+                using (var process = new Process { StartInfo = processStartInfo })
+                {
+                    process.Start();
+                    process.WaitForExit();  // Espera a que el proceso termine
+                }
+            }
+
+            // Configura el temporizador para la siguiente ejecución según la expresión cron
             TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
             _timer.Change(timeUntilNextRun, Timeout.InfiniteTimeSpan);
         }
