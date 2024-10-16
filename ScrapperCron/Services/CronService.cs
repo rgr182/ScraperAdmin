@@ -58,17 +58,21 @@ namespace ScrapperCron.Services
 
         public async Task ExecuteOnce()
         {
-            await ExecuteTaskAsync();            
+            await ExecuteTaskAsync(false);            
         }
 
-        private async Task ExecuteTaskAsync()
+        private async Task ExecuteTaskAsync(bool isCron = true)
         {
             Console.WriteLine("Ejecutado!");
             //TODO: Execute Cron.
 
             // Reset the timer for the next run according to the cron expression
-            TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
-            _timer.Change(timeUntilNextRun, Timeout.InfiniteTimeSpan);
+            if (isCron)
+            {
+                TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
+                _timer.Change(timeUntilNextRun, Timeout.InfiniteTimeSpan);
+
+            }            
         }
 
         private TimeSpan CalculateTimeUntilNextRun(string cronExpression)
