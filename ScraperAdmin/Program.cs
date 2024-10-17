@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using ScraperAdmin.DataAccess.Repositories;
 
 using Microsoft.Extensions.FileProviders;
+using ScrapperCron.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddScoped<IRawHtmlRepository, RawHtmlRepository>();
 builder.Services.AddScoped<IRawHtmlService, RawHtmlService>();
 builder.Services.AddScoped<IScraperService, ScraperService>();
 builder.Services.AddScoped<IScraperRepository, ScraperRepository>();
+builder.Services.AddScoped<ICronService, CronService>();
 
 builder.Services.AddControllersWithViews();
 

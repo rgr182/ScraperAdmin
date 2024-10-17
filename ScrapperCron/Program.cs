@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScrapperCron.Services;
-using Cron_BolsaDeTrabajo.Infrastructure;
 
 namespace Cron_BolsaDeTrabajo
 {
@@ -14,14 +13,8 @@ namespace Cron_BolsaDeTrabajo
 
             // Setup Dependency Injection
             var serviceProvider = new ServiceCollection()
-                .AddSingleton<IConfiguration>(configuration)
-                .AddSingleton<IMongoDbConnection>(sp =>
-                {
-                    var mongoConnectionString = configuration["MongoDB:ConnectionString"];
-                    var mongoDatabaseName = configuration["MongoDB:DatabaseName"];
-                    return new MongoDbConnection(mongoConnectionString, mongoDatabaseName);
-                })                
-                .AddSingleton<ICronService, CronService>()
+                .AddSingleton<IConfiguration>(configuration)                  
+                .AddScoped<ICronService, CronService>()
                 .BuildServiceProvider();
 
             var cronService = serviceProvider.GetService<ICronService>();

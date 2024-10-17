@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Cron_BolsaDeTrabajo.Infrastructure;
 using NCrontab;
 
 namespace ScrapperCron.Services
@@ -14,18 +9,20 @@ namespace ScrapperCron.Services
         Task StartAsync();
         Task ExecuteOnce();
     }
+
     public class CronService : ICronService
-    {
-        private readonly IMongoDbConnection _mongoDbConnection;
+    {        
         private Timer _timer;
         private readonly string _cronExpression;
         private readonly IConfiguration _configuration;
-        public CronService(IMongoDbConnection mongoDbConnection, IConfiguration configuration)
-        {
-            _mongoDbConnection = mongoDbConnection;
+
+        public CronService(IConfiguration configuration)
+        {            
             _configuration = configuration;
+
             // Setup MongoDB collection access
-            var mongoCollectionName = _configuration["MongoDB:CollectionName"];
+            var mongoCollectionName = _configuration["MongoDB:CollectionName"];         
+
             // Load cron expression from configuration
             _cronExpression = _configuration["CronJob:CronExpression"];
             if (string.IsNullOrEmpty(_cronExpression))

@@ -1,12 +1,8 @@
-using ScraperAdmin.DataAccess.Models.Documents;
 using ScraperAdmin.DataAccess.Repositories;
-using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace ScraperAdmin.DataAccess.Services
 {
-   
+
 
     public class AIEventProcessingService : IAIEventProcessingService
     {

@@ -1,7 +1,6 @@
 using System.Text.Json;
 using OpenAI.Assistants;
 using ScraperAdmin.DataAccess.Models.Documents;
-using ScraperAdmin.DataAccess.Models.Entities;
 using MongoDB.Bson;
 using ScraperAdmin.DataAccess.Models.DTOs;
 

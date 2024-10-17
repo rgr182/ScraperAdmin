@@ -1,13 +1,10 @@
 using ScraperAdmin.DataAccess.Context;
 using ScraperAdmin.DataAccess.Models.Documents;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace ScraperAdmin.DataAccess.Repositories
 {
-   
+
 
     public class EventRepository : IEventRepository
     {

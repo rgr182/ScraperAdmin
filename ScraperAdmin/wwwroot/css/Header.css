@@ -1,0 +1,33 @@
+﻿/* Exclusive styles for the header */
+
+/* Header container */
+.custom-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0F6FE4; /* Blue */
+    padding: 10px 20px;
+    height: 70px;
+}
+
+/* Logo styles inside the header */
+.custom-header-logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+    .custom-header-logo img {
+        height: 50px;
+    }
+
+/* Logout button styles inside the header */
+.custom-header-logout {
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+    .custom-header-logout:hover {
+        text-decoration: underline;
+    }
