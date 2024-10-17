@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ScrapperCron.Services;
 
 namespace ScraperAdmin.Controllers
@@ -7,7 +6,7 @@ namespace ScraperAdmin.Controllers
     public class ScraperController : Controller
     {
         ICronService _cronService;
-        ScraperController(ICronService _cronService) {
+        public ScraperController(ICronService _cronService) {
 
             ICronService cronService = _cronService;
         }

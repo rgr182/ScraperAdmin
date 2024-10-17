@@ -78,9 +78,10 @@ namespace ScraperAdmin.DataAccess.Services
                 runId,
                 [new ToolOutput(toolCallId, output)]
             );
-            #pragma warning restore OPENAI001
+#pragma warning restore OPENAI001
         }
-        //TODO, check if they have added an awaiter for GetMessagesAsync (they haven't as of october 7th 2024)
+
+        // TODO: Check if they have added an awaiter for GetMessagesAsync(they haven't as of October 7th, 2024)
         public async Task<OpenAIMessage?> GetLatestMessageAsync(string threadId)
         {
             #pragma warning disable OPENAI001
