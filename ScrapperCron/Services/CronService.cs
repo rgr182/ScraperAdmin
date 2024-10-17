@@ -15,6 +15,9 @@ namespace ScrapperCron.Services
         private Timer _timer;
         private readonly string _cronExpression;
         private readonly IConfiguration _configuration;
+        private readonly string _virtualEnvPath;
+        private readonly string _scrapyProjectPath;
+        private readonly string _executeSpiderPath;
 
         public CronService(IConfiguration configuration)
         {            
@@ -25,6 +28,9 @@ namespace ScrapperCron.Services
 
             // Load cron expression from configuration
             _cronExpression = _configuration["CronJob:CronExpression"];
+            _virtualEnvPath = _configuration["PythonSettings:VirtualEnvPath"];
+            _scrapyProjectPath = _configuration["PythonSettings:ScrapyProjectPath"];
+            _executeSpiderPath = _configuration["PythonSettings:ExecuteSpiderPath"];
             if (string.IsNullOrEmpty(_cronExpression))
             {
                 Console.WriteLine("No valid cron expression found in the configuration.");
@@ -37,7 +43,6 @@ namespace ScrapperCron.Services
         }
         private void InitializeCronJob()
         {
-            // Initialize timer based on the cron expression
             TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
             _timer = new Timer(async _ => await ExecuteTaskAsync(), null, timeUntilNextRun, Timeout.InfiniteTimeSpan);
             Console.WriteLine("Cron job initialized.");
@@ -45,7 +50,6 @@ namespace ScrapperCron.Services
         public async Task StartAsync()
         {
             Console.WriteLine("Cron job Program started.");
-            // Further implementation to start the cron job can be added here
         }
         public async Task ExecuteOnce()
         {
@@ -54,24 +58,20 @@ namespace ScrapperCron.Services
         private async Task ExecuteTaskAsync(bool isCron = true)
         {
             Console.WriteLine("Activando entorno virtual y cambiando al directorio del proyecto...");
-            // Ruta al entorno virtual de Python
-            string activateVenv = @"C:\Users\GIBRAN\Python\BoilerPlateScrapy\venv\Scripts\activate.bat";
-            // Directorio del proyecto de Scrapy
-            string scrapyProjectPath = @"C:\Users\GIBRAN\Python\BoilerPlateScrapy\boilerplateScrapy";
-            // Primero, activamos el entorno virtual y verificamos la versión de Python
+
             var activateProcessStartInfo = new ProcessStartInfo
             {
-                FileName = "cmd.exe",  // Ejecuta cmd.exe
-                Arguments = $"/C {activateVenv} && cd {scrapyProjectPath} && python --version",  // Verifica que estamos usando la versión correcta de Python
+                FileName = "cmd.exe",
+                Arguments = $"/C {_virtualEnvPath} && cd {_scrapyProjectPath} && python --version",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             using (var process = new Process { StartInfo = activateProcessStartInfo })
             {
                 process.Start();
-                process.WaitForExit();  // Asegura que el proceso se complete antes de continuar
+                process.WaitForExit();
             }
-            // Ahora ejecuta cada spider por separado
+
             Console.WriteLine("Ejecutando los spiders de Scrapy...");
             var spiders = new List<string> { "bookspider", "techCrunch", "angelList" };
             foreach (var spiderName in spiders)
@@ -80,18 +80,18 @@ namespace ScrapperCron.Services
                 var processStartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/C {activateVenv} && cd {scrapyProjectPath} && C:\\Users\\GIBRAN\\Python\\BoilerPlateScrapy\\venv\\Scripts\\scrapy.exe crawl {spiderName}",  // Usa la ruta completa de scrapy
+                    Arguments = $"/C {_virtualEnvPath} && cd {_scrapyProjectPath} && {_executeSpiderPath}scrapy.exe crawl {spiderName}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    WorkingDirectory = scrapyProjectPath  // Establece el directorio de trabajo al proyecto Scrapy
+                    WorkingDirectory = _scrapyProjectPath
                 };
                 using (var process = new Process { StartInfo = processStartInfo })
                 {
                     process.Start();
-                    process.WaitForExit();  // Espera a que el proceso termine
+                    process.WaitForExit();
                 }
             }
-            // Reset the timer for the next run according to the cron expression
+
             if (isCron)
             {
                 TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
