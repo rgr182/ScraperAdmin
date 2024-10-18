@@ -58,7 +58,7 @@ body.scraper-body {
 
 /* Adjustments for the text footer of the card */
 .scraper-card-footer {
-    background-color: rgba(0, 128, 0, 0.7); /* Semi-transparent green background */
+    background-color: rgba(34, 139, 34, 0.7);
     width: 100%; /* Full width of the footer */
     padding: 8px; /* Reduced padding inside the footer */
     display: flex; /* Enables flexbox for layout */
