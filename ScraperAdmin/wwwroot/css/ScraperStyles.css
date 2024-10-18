@@ -2,49 +2,51 @@
 body.scraper-body {
     background-color: #0F6FE4; /* Background color of the page */
     margin: 0; /* Removes default margin */
-    min-height: 95vh; /* Ensures the body takes up at least the full viewport height */
+    display: flex; /* Enables flexbox layout for centering */
     flex-direction: column; /* Arranges content in a column */
-    justify-content: center; /* Centers the content vertically */
+    min-height: 100vh; /* Ensures the body takes up at least the full viewport height */
 }
 
-.scraper-container {
-    width: 100%; /* Full width of the container */
-    max-width: 1200px; /* Maximum width of the container */
-    margin: 0 auto; /* Centers the container horizontally */
-    padding: 20px; /* Padding inside the container */
-    text-align: center; /* Centers text within the container */
-}
 
 /* Aligns scraper cards in a row */
 .scraper-row {
     display: flex; /* Uses flexbox layout */
     justify-content: center; /* Ensures cards are centered */
     flex-wrap: wrap; /* Allows cards to wrap to the next line if necessary */
-    gap: 20px; /* Space between the cards */
+    gap: 15px; /* Space between the cards */
+}
+
+/* Container for main content without background */
+.scraper-container {
+    height: 800px;
+    width: 100%; /* Full width of the container */
+    max-width: 1000px; /* Increased maximum width for better alignment */
+    margin: 20px auto; /* Centers the container horizontally with margin above and below */
+    padding: 20px; /* Padding inside the container */
+    border-radius: 8px; /* Rounded corners for the container */
 }
 
 /* Adjustments for individual scraper cards */
 .scraper-card {
-    width: 300px; /* Fixed width of the card */
-    margin-bottom: 20px; /* Space below each card */
+    height: 250px;
+    width: calc(33.333% - 10px); /* Width for 3 cards in a row with space for gaps */
+    margin-bottom: 15px; /* Space below each card */
     display: flex; /* Enables flexbox for content layout */
     flex-direction: column; /* Arranges content vertically */
     justify-content: flex-end; /* Ensures content is aligned to the bottom */
     align-items: center; /* Centers content horizontally */
-    background-color: white; /* White background for the card */
     border-radius: 8px; /* Rounded corners */
     overflow: hidden; /* Prevents overflow of content */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
 }
 
 /* Image container within the card */
 .scraper-card-body {
     width: 100%; /* Full width of the card body */
-    height: 200px; /* Fixed height for the image area */
+    height: 180px; /* Reduced fixed height for the image area */
     display: flex; /* Enables flexbox for alignment */
     justify-content: center; /* Centers content vertically */
     align-items: center; /* Centers content horizontally */
-    padding: 20px; /* Padding around the image */
+    padding: 10px; /* Reduced padding around the image */
 }
 
     /* Styling for the image within the card body */
@@ -56,9 +58,9 @@ body.scraper-body {
 
 /* Adjustments for the text footer of the card */
 .scraper-card-footer {
-    background-color: rgba(0, 128, 0, 0.7); /* Semi-transparent green background */
+    background-color: rgba(34, 139, 34, 0.7);
     width: 100%; /* Full width of the footer */
-    padding: 10px; /* Padding inside the footer */
+    padding: 8px; /* Reduced padding inside the footer */
     display: flex; /* Enables flexbox for layout */
     flex-direction: column; /* Arranges content vertically */
     justify-content: space-between; /* Spaces text and icon apart */
@@ -66,12 +68,20 @@ body.scraper-body {
 
 /* Pagination styles */
 .scraper-pagination .pagination {
-    margin-top: 20px; /* Space above pagination */
+    margin-top: 15px; /* Space above pagination */
     justify-content: center; /* Centers pagination links */
 }
 
 /* Centered title styling */
 h2 {
     color: white; /* White text color for visibility */
-    margin-bottom: 20px; /* Space below the title */
+    margin-bottom: 15px; /* Reduced space below the title */
+}
+
+/* Footer styles */
+footer {
+    background-color: #ffffff; /* Background color for footer */
+    padding: 10px; /* Padding for footer */
+    text-align: center; /* Centers text in footer */
+    margin-top: auto; /* Ensures footer stays at the bottom */
 }
