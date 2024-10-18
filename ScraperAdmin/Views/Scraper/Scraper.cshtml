@@ -6,9 +6,9 @@
 <link href="~/css/ScraperStyles.css" rel="stylesheet" />
 
 <body class="scraper-body">
-    <div class="scraper-container text-center"> <!-- Main container for scrapers with center-aligned text -->
+    <div class="scraper-container text-center">
+        <!-- Main container for scrapers with center-aligned text -->
         <h2 class="text-white">Scrapers</h2> <!-- Main heading of the page in white color -->
-
         <!-- Dynamic container for the scrapers -->
         <div class="scraper-row mt-4" id="scraperListDynamic">
             <!-- Dynamic scrapers will be loaded here -->
@@ -56,8 +56,9 @@
                 const scraperListDynamic = document.getElementById('scraperListDynamic');
                 scraperListDynamic.innerHTML = ''; // Clear the container before adding new scrapers
 
-                // Generate scraper cards dynamically
-                data.forEach(scraper => {
+                // Ensure only 'pageSize' number of scrapers are processed
+                const displayedScrapers = data.slice(0, pageSize); // Limit to pageSize items
+                displayedScrapers.forEach(scraper => {
                     const card = generateScraperCard(scraper);
                     scraperListDynamic.innerHTML += card; // Append the generated card to the container
                 });
@@ -71,23 +72,23 @@
     // Function to generate each scraper's card
     function generateScraperCard(scraper) {
         return `
-            <div class="scraper-card shadow-sm">
-                <div class="scraper-card-body p-3">
-                    <img src="${scraper.imagePath}" alt="${scraper.scraperName} Image" class="img-fluid" />
+                <div class="scraper-card shadow-sm">
+                    <div class="scraper-card-body p-3">
+                        <img src="${scraper.imagePath}" alt="${scraper.scraperName} Image" class="img-fluid" />
+                    </div>
+                    <div class="scraper-card-footer">
+                        <span class="text-white">${scraper.scraperName}</span> <!-- Display the scraper name -->
+                        <span class="scraper-status-text text-white">
+                            Status:
+                            <i class="bi bi-${getStatusIcon(scraper.scraperStatusId)}" style="color: ${getStatusColor(scraper.scraperStatusId)};"></i> <!-- Icon representing the scraper's status -->
+                            ${scraper.lastExecutionDate ? new Date(scraper.lastExecutionDate).toLocaleString() : 'Not executed'} <!-- Show last execution date or not executed -->
+                        </span>
+                        <span class="scraper-url">
+                            <a href="${scraper.scraperUrl}" target="_blank" class="text-white">Visit Site</a> <!-- Link to the scraper's site -->
+                        </span>
+                    </div>
                 </div>
-                <div class="scraper-card-footer">
-                    <span class="text-white">${scraper.scraperName}</span> <!-- Display the scraper name -->
-                    <span class="scraper-status-text text-white">
-                        Status:
-                        <i class="bi bi-${getStatusIcon(scraper.scraperStatusId)}" style="color: ${getStatusColor(scraper.scraperStatusId)};"></i> <!-- Icon representing the scraper's status -->
-                        ${scraper.lastExecutionDate ? new Date(scraper.lastExecutionDate).toLocaleString() : 'Not executed'} <!-- Show last execution date or not executed -->
-                    </span>
-                    <span class="scraper-url">
-                        <a href="${scraper.scraperUrl}" target="_blank" class="text-white">Visit Site</a> <!-- Link to the scraper's site -->
-                    </span>
-                </div>
-            </div>
-        `;
+            `;
     }
 
     // Function to return the appropriate icon based on the statusId
