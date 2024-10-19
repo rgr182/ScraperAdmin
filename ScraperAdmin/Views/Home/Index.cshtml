@@ -39,11 +39,20 @@
                     if (response.ok) {
                         // Store the token in sessionStorage upon successful validation
                         sessionStorage.setItem('accessToken', token);
+
+                        // Redirect to /scraper after token validation
+                        window.location.href = '/scraper';
+                    } else {
+                        // Handle invalid token (optional feedback to the user)
+                        alert('Invalid token. Please try again.');
                     }
                 })
                 .catch(error => {
                     // Handle error silently or with your own custom error handling
+                    console.error('Error during token validation:', error);
                 });
+        } else {
+            alert('Please enter a token.');
         }
     }
 

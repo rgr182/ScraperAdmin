@@ -11,7 +11,6 @@ namespace ScraperAdmin.Controllers
             ICronService cronService = _cronService;
         }
 
-
         public IActionResult Index()
         {
             return View("Scraper");
