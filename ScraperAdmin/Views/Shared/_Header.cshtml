@@ -10,7 +10,7 @@
 
     <header class="custom-header">
         <!-- Logo -->
-        <div class="custom-header-logo" onclick="goHome()">
+        <div class="custom-header-logo">
             <img src="~/Media/ICON.png" alt="Git Image" class="img-fluid" />
         </div>
         <!-- Logout -->
@@ -18,14 +18,9 @@
     </header>
 
     <script>
-
-        function goHome() {
-           // window.location.href = '/Home/Index';
-        }
-
         function logout() {
-            localStorage.clear();
-            // window.location.href = '/Login';  Cambia esto por la ruta del login
+            sessionStorage.clear();
+            window.location.href = '/';
         }
     </script>
 
