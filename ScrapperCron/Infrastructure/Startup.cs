@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using ScrapperCron.Services;
+using System;
+using System.IO;
 
 namespace ScrapperCron.Infrastructure
 {
@@ -11,6 +13,16 @@ namespace ScrapperCron.Infrastructure
         // Configure Serilog
         public static void ConfigureLogging()
         {
+            // Define the base path as the current working directory of the project
+            var basePath = Directory.GetCurrentDirectory();
+            var logDirectory = Path.Combine(basePath, "logs");
+
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+                Console.WriteLine("Created logs directory at " + logDirectory);
+            }
+
             // Setup Serilog using configuration from appsettings.cron.json
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(LoadConfiguration()) // Load configuration from the file
