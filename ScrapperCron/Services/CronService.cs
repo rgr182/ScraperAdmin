@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using NCrontab;
+using System;
 
 namespace ScrapperCron.Services
 {
@@ -18,13 +21,21 @@ namespace ScrapperCron.Services
         private readonly string _virtualEnvPath;
         private readonly string _scrapyProjectPath;
         private readonly string _executeSpiderPath;
+        private readonly IMongoCollection<BsonDocument> _mongoCollection;
 
         public CronService(IConfiguration configuration)
         {            
             _configuration = configuration;
 
-            // Setup MongoDB collection access
-            var mongoCollectionName = _configuration["MongoDB:CollectionName"];         
+            // Retrieve MongoDB settings from the appsettings.cron.json.
+            var mongoConnectionString = _configuration["MongoDB:ConnectionString"];
+            var mongoDatabaseName = _configuration["MongoDB:DatabaseName"];
+            var mongoCollectionName = _configuration["MongoDB:Collections:RawHtmlCollectionName"];
+
+            // Configuración de la conexión a MongoDB
+            var mongoClient = new MongoClient(mongoConnectionString);
+            var mongoDatabase = mongoClient.GetDatabase(mongoDatabaseName);
+            _mongoCollection = mongoDatabase.GetCollection<BsonDocument>(mongoCollectionName);
 
             // Load cron expression from configuration
             _cronExpression = _configuration["CronJob:CronExpression"];
@@ -37,7 +48,6 @@ namespace ScrapperCron.Services
                 return;
             }
 #if !TESTING
-            // In normal mode, setup the cron job
             InitializeCronJob();
 #endif
         }
@@ -58,7 +68,6 @@ namespace ScrapperCron.Services
         private async Task ExecuteTaskAsync(bool isCron = true)
         {
             Console.WriteLine("Activando entorno virtual y cambiando al directorio del proyecto...");
-
             var activateProcessStartInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
@@ -66,16 +75,17 @@ namespace ScrapperCron.Services
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
-            using (var process = new Process { StartInfo = activateProcessStartInfo })
+            using (var activateProcess = new Process { StartInfo = activateProcessStartInfo })
             {
-                process.Start();
-                process.WaitForExit();
+                activateProcess.Start();
+                activateProcess.WaitForExit();
             }
-
             Console.WriteLine("Ejecutando los spiders de Scrapy...");
             var spiders = new List<string> { "bookspider", "techCrunch", "angelList" };
             foreach (var spiderName in spiders)
             {
+                await UpdateScraperStatusAsync(spiderName, "Scraping en Proceso");
+
                 Console.WriteLine($"Ejecutando el spider: {spiderName}");
                 var processStartInfo = new ProcessStartInfo
                 {
@@ -85,18 +95,53 @@ namespace ScrapperCron.Services
                     CreateNoWindow = true,
                     WorkingDirectory = _scrapyProjectPath
                 };
-                using (var process = new Process { StartInfo = processStartInfo })
+                using (Process process = new Process { StartInfo = processStartInfo })
                 {
-                    process.Start();
-                    process.WaitForExit();
+                    try
+                    {
+                        process.Start();
+                        process.WaitForExit();
+                        if (!process.HasExited)
+                        {
+                            process.Kill();
+                        }
+                        if (process.ExitCode == 0)
+                        {
+                            await UpdateScraperStatusAsync(spiderName, "Scraping Completado");
+                        }
+                        else
+                        {
+                            await UpdateScraperStatusAsync(spiderName, "Scraping Fallido");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ocurrió un error al ejecutar el spider {spiderName}: {ex.Message}");
+                        await UpdateScraperStatusAsync(spiderName, "Scraping Fallido");
+                    }
                 }
             }
-
             if (isCron)
             {
                 TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun(_cronExpression);
                 _timer.Change(timeUntilNextRun, Timeout.InfiniteTimeSpan);
-            }            
+            }
+        }
+        private async Task UpdateScraperStatusAsync(string title, string status)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("title", title);
+            var update = Builders<BsonDocument>.Update
+                .Set("status", status)
+                .Set("lastExecutionDate", DateTime.Now);
+            var result = await _mongoCollection.UpdateOneAsync(filter, update);
+            if (result.ModifiedCount > 0)
+            {
+                Console.WriteLine($"Documento '{title}' actualizado con estado: {status}");
+            }
+            else
+            {
+                Console.WriteLine($"No se encontró el documento con el título '{title}' para actualizar.");
+            }
         }
         private TimeSpan CalculateTimeUntilNextRun(string cronExpression)
         {

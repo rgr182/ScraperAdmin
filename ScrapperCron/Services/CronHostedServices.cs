@@ -12,18 +12,14 @@ namespace ScrapperCron.Services
         {
             _cronService = cronService;
         }
-
-        // Este método se ejecuta cuando el servicio se inicia
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _cronService.StartAsync(); // Inicia el cron job
+            await _cronService.StartAsync();
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(1000, stoppingToken); // Mantener la ejecución en segundo plano
+                await Task.Delay(1000, stoppingToken);
             }
         }
-
-        // Detener el servicio cuando se recibe la señal de parada
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
             await base.StopAsync(stoppingToken);
