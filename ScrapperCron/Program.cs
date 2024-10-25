@@ -2,7 +2,7 @@
 using ScrapperCron.Infrastructure;
 using Serilog;
 
-namespace ScrapperCron
+namespace ScraperCron
 {
     class Program
     {
